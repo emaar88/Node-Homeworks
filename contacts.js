@@ -41,7 +41,7 @@ async function addContact(name, email, phone) {
   try {
     const data = JSON.parse(await fsPromises.readFile(contactsPath, "utf-8"));
     const newContact = {
-      id: shortid.generate(shortid.seed(1000)),
+      id: shortid.generate(),
       name,
       email,
       phone,
