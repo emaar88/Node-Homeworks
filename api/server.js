@@ -2,14 +2,14 @@ const express = require("express");
 const cors = require("cors");
 const logger = require("morgan");
 
-const contacts = require("./contacts_controllers/contact.router");
-// const contacts = require("../contacts");
+const contacts = require("./users/contact.router");
+const products = require("./products/products.router");
 
 require("dotenv").config();
 
 const PORT = process.env.PORT;
 
-class ContactService {
+class UserService {
   constructor() {
     this.server = null;
   }
@@ -33,7 +33,7 @@ class ContactService {
   }
 
   initRoutes() {
-    this.server.use("/contacts", contacts);
+    this.server.use("/api", contacts);
   }
 
   erroHandler() {
@@ -52,4 +52,4 @@ class ContactService {
   }
 }
 
-module.exports = ContactService;
+module.exports = UserService;
