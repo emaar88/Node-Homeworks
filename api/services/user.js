@@ -1,5 +1,3 @@
-class User {
+class Contact {}
 
-}
-
-module.exports = User;
+module.exports = Contact;

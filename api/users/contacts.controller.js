@@ -1,28 +1,30 @@
 const Joi = require("joi");
 const { promises: fsPromises } = require("fs");
 const path = require("path");
-const shortid = require("shortid");
 
-let contactsPath = path.join(__dirname, "./db/contacts.json");
-
-const contacts = require("../../db/contacts.json");
+const contactsPath = path.join(__dirname, "/../../db/contacts.json");
 
 class ContactController {
-  getContacts(req, res, next) {
+  async getContacts(req, res, next) {
     try {
+      let contacts = JSON.parse(
+        await fsPromises.readFile(contactsPath, "utf-8")
+      );
       return res.status(200).send(contacts);
     } catch (err) {
       next(err);
     }
   }
 
-  getContactById(req, res, next) {
+  async getContactById(req, res, next) {
     try {
+      let contacts = JSON.parse(
+        await fsPromises.readFile(contactsPath, "utf-8")
+      );
       const targetContactsIndex = ContactController.findContactIndexById(
         req.params.id,
         res
       );
-      console.log(targetContactsIndex);
 
       if (targetContactsIndex === undefined) {
         return res.status(404).send({ message: "Contact not found" });
@@ -33,21 +35,27 @@ class ContactController {
     }
   }
 
-  createContact(req, res, next) {
+  async createContact(req, res, next) {
     try {
+      let contacts = JSON.parse(
+        await fsPromises.readFile(contactsPath, "utf-8")
+      );
       contacts.push({
         id: contacts.length + 1,
         ...req.body,
       });
-      fsPromises.writeFile(contactsPath, JSON.stringify(contacts));
+      await fsPromises.writeFile(contactsPath, JSON.stringify(contacts));
       return res.status(201).send({ message: "Contact created" });
     } catch (err) {
       next(err);
     }
   }
 
-  deleteContact(req, res, next) {
+  async deleteContact(req, res, next) {
     try {
+      let contacts = JSON.parse(
+        await fsPromises.readFile(contactsPath, "utf-8")
+      );
       const targetContactsIndex = ContactController.findContactIndexById(
         req.params.id,
         res
@@ -58,15 +66,18 @@ class ContactController {
       }
 
       contacts.splice(targetContactsIndex, 1);
-
+      await fsPromises.writeFile(contactsPath, JSON.stringify(contacts));
       return res.status(200).end();
     } catch (err) {
       next(err);
     }
   }
 
-  updateContact(req, res, next) {
+  async updateContact(req, res, next) {
     try {
+      let contacts = JSON.parse(
+        await fsPromises.readFile(contactsPath, "utf-8")
+      );
       const targetContactsIndex = ContactController.findContactIndexById(
         req.params.id,
         res
@@ -80,6 +91,7 @@ class ContactController {
         ...contacts[targetContactsIndex],
         ...req.body,
       };
+      await fsPromises.writeFile(contactsPath, JSON.stringify(contacts));
 
       return res.status(204).end();
     } catch (err) {
@@ -126,8 +138,10 @@ class ContactController {
     next();
   }
 
-  static findContactIndexById(contactId, res) {
+  async findContactIndexById(contactId, res) {
+    let contacts = JSON.parse(await fsPromises.readFile(contactsPath, "utf-8"));
     const id = parseInt(contactId);
+
     const targetContactsIndex = contacts.findIndex(
       (contact) => contact.id === id
     );

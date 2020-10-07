@@ -8,7 +8,7 @@ require("dotenv").config();
 
 const PORT = process.env.PORT;
 
-class UserService {
+class ContactService {
   constructor() {
     this.server = null;
   }
@@ -51,4 +51,4 @@ class UserService {
   }
 }
 
-module.exports = UserService;
+module.exports = ContactService;
