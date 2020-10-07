@@ -5,6 +5,8 @@ const userRouter = Router();
 
 userRouter.get("/contacts", ContactController.getContacts);
 
+userRouter.get("/api/contacts/:contactId", ContactController.getContactById);
+
 userRouter.post(
   "/contacts",
   ContactController.validateCreateContact,
