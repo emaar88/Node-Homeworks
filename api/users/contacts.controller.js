@@ -10,7 +10,7 @@ const contacts = require("../../db/contacts.json");
 class ContactController {
   getContacts(req, res, next) {
     try {
-      return res.send(contacts);
+      return res.status(200).send(contacts);
     } catch (err) {
       next(err);
     }
@@ -24,10 +24,10 @@ class ContactController {
       );
       console.log(targetContactsIndex);
 
-      return res.status(200).send(contacts[targetContactsIndex]);
       if (targetContactsIndex === undefined) {
         return res.status(404).send({ message: "Contact not found" });
       }
+      return res.status(200).send(contacts[targetContactsIndex]);
     } catch (err) {
       next(err);
     }
