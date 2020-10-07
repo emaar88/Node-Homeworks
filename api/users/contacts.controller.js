@@ -1,4 +1,9 @@
 const Joi = require("joi");
+const { promises: fsPromises } = require("fs");
+const path = require("path");
+const shortid = require("shortid");
+
+let contactsPath = path.join(__dirname, "./db/contacts.json");
 
 const contacts = require("../../db/contacts.json");
 
@@ -17,12 +22,12 @@ class ContactController {
         req.params.id,
         res
       );
+      console.log(targetContactsIndex);
 
+      return res.status(200).send(contacts[targetContactsIndex]);
       if (targetContactsIndex === undefined) {
         return res.status(404).send({ message: "Contact not found" });
       }
-
-      return res.status(200).send(contacts);
     } catch (err) {
       next(err);
     }
@@ -34,7 +39,7 @@ class ContactController {
         id: contacts.length + 1,
         ...req.body,
       });
-
+      fsPromises.writeFile(contactsPath, JSON.stringify(contacts));
       return res.status(201).send({ message: "Contact created" });
     } catch (err) {
       next(err);
@@ -100,7 +105,7 @@ class ContactController {
     const createSchemaValidator = Joi.object({
       name: Joi.string().required(),
       email: Joi.string().required(),
-      password: Joi.string().required(),
+      phone: Joi.string().required(),
     });
 
     ContactController.checkValidationError(

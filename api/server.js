@@ -3,7 +3,6 @@ const cors = require("cors");
 const logger = require("morgan");
 
 const contacts = require("./users/contact.router");
-const products = require("./products/products.router");
 
 require("dotenv").config();
 
