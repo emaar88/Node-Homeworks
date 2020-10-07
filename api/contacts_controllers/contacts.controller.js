@@ -1,11 +1,23 @@
 const Joi = require("joi");
 
+const { promises: fsPromises } = require("fs");
+const path = require("path");
+const shortid = require("shortid");
+
+let contactsPath = path.join(__dirname, "/../../db/contacts.json");
+
 const contactsMethods = require("../../contacts");
-
-const contacts = require("../../db/contacts.json");
-console.log(contacts);
-
 // console.log(contactsMethods);
+
+async function myContacts() {
+  try {
+    const data = JSON.parse(await fsPromises.readFile(contactsPath, "utf-8"));
+  } catch (error) {
+    console.log(error);
+  }
+}
+const contacts = myContacts();
+console.log(contacts);
 
 class ContactController {
   getContacts(req, res, next) {
