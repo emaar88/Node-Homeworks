@@ -21,12 +21,17 @@ class ContactController {
       let contacts = JSON.parse(
         await fsPromises.readFile(contactsPath, "utf-8")
       );
-      const targetContactsIndex = ContactController.findContactIndexById(
-        req.params.id,
-        res
+      const id = parseInt(req.params.contactId);
+
+      const targetContactsIndex = contacts.findIndex(
+        (contact) => contact.id === id
       );
 
-      if (targetContactsIndex === undefined) {
+      if (targetContactsIndex === -1) {
+        return res.status(404).send({ message: "Not found" });
+      }
+
+      if (!targetContactsIndex) {
         return res.status(404).send({ message: "Contact not found" });
       }
       return res.status(200).send(contacts[targetContactsIndex]);
@@ -56,13 +61,18 @@ class ContactController {
       let contacts = JSON.parse(
         await fsPromises.readFile(contactsPath, "utf-8")
       );
-      const targetContactsIndex = ContactController.findContactIndexById(
-        req.params.id,
-        res
+      const id = parseInt(req.params.contactId);
+
+      const targetContactsIndex = contacts.findIndex(
+        (contact) => contact.id === id
       );
 
-      if (targetContactsIndex === undefined) {
-        return;
+      if (targetContactsIndex === -1) {
+        return res.status(404).send({ message: "Not found" });
+      }
+
+      if (!targetContactsIndex) {
+        return res.status(404).send({ message: "Contact not found" });
       }
 
       contacts.splice(targetContactsIndex, 1);
@@ -78,12 +88,17 @@ class ContactController {
       let contacts = JSON.parse(
         await fsPromises.readFile(contactsPath, "utf-8")
       );
-      const targetContactsIndex = ContactController.findContactIndexById(
-        req.params.id,
-        res
+      const id = parseInt(req.params.contactId);
+
+      const targetContactsIndex = contacts.findIndex(
+        (contact) => contact.id === id
       );
 
-      if (targetContactsIndex === undefined) {
+      if (targetContactsIndex === -1) {
+        return res.status(404).send({ message: "Not found" });
+      }
+
+      if (!targetContactsIndex) {
         return res.status(404).send({ message: "Contact not found" });
       }
 
@@ -103,6 +118,7 @@ class ContactController {
     const updateSchemaValidator = Joi.object({
       name: Joi.string(),
       email: Joi.string(),
+      phone: Joi.string(),
     });
 
     ContactController.checkValidationError(
@@ -136,21 +152,6 @@ class ContactController {
       return res.status(400).send({ error: message });
     }
     next();
-  }
-
-  async findContactIndexById(contactId, res) {
-    let contacts = JSON.parse(await fsPromises.readFile(contactsPath, "utf-8"));
-    const id = parseInt(contactId);
-
-    const targetContactsIndex = contacts.findIndex(
-      (contact) => contact.id === id
-    );
-
-    if (targetContactsIndex === -1) {
-      return res.status(404).send({ message: "Not found" });
-    }
-
-    return targetContactsIndex;
   }
 }
 
