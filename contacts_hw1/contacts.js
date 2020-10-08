@@ -2,7 +2,7 @@ const { promises: fsPromises } = require("fs");
 const path = require("path");
 const shortid = require("shortid");
 
-let contactsPath = path.join(__dirname, "./db/contacts.json");
+let contactsPath = path.join(__dirname, "../db.json");
 
 async function listContacts() {
   try {
