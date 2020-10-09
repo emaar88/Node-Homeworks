@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const logger = require("morgan");
 
-const contacts = require("./contactsWithoutDB/contact.router");
+const contacts = require("../contacts/contact.router");
 
 require("dotenv").config();
 
