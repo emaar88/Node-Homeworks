@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const logger = require("morgan");
 
-const contacts = require("./contactsWithoutDB/contact.router");
+const contactsRouter = require("../contacts_api/contact.router");
 
 require("dotenv").config();
 
@@ -17,7 +17,7 @@ class ContactService {
     this.initServer();
     this.initMiddleware();
     this.initRoutes();
-    this.erroHandler();
+    this.errorHandler();
     this.startListening();
   }
 
@@ -32,10 +32,10 @@ class ContactService {
   }
 
   initRoutes() {
-    this.server.use("/api", contacts);
+    this.server.use("/api", contactsRouter);
   }
 
-  erroHandler() {
+  errorHandler() {
     this.server.use((err, req, res, next) => {
       if (err) {
         const code = err.status ? err.status : 400;

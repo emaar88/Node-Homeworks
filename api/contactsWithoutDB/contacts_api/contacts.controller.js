@@ -2,7 +2,7 @@ const Joi = require("joi");
 const { promises: fsPromises } = require("fs");
 const path = require("path");
 
-const contactsPath = path.join(__dirname, "/../../db/contacts.json");
+const contactsPath = path.join(__dirname, "/../db/contacts.json");
 
 class ContactController {
   async getContacts(req, res, next) {
