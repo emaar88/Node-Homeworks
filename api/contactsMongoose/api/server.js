@@ -49,7 +49,7 @@ class Server {
   initErrorHandler() {}
   startListening() {
     this.server.listen(PORT, () =>
-      console.log(`Server was started on PORT ${PORT}`)
+      console.log(`Server was started on PORT: ${PORT} using MongoDB: ${URI}`)
     );
   }
 }
