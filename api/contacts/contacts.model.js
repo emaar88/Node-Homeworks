@@ -4,14 +4,16 @@ const contactSchema = new Schema({
   name: { type: String, required: true },
   email: {
     type: String,
-    validate: (email) => {
-      if (!email.includes("@")) {
-        throw new Error("Email must have @");
-      }
-
-      return true;
+    trim: true,
+    lowercase: true,
+    unique: true,
+    validate: {
+      validator: function (v) {
+        return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v);
+      },
+      message: "Please enter a valid email",
     },
-    required: true,
+    required: [true, "Email required"],
   },
   phone: {
     type: String,
@@ -19,7 +21,8 @@ const contactSchema = new Schema({
       validator: function (v) {
         return /\d{3}-\d{3}-\d{4}/.test(v);
       },
-      message: (props) => `${props.value} is not a valid phone number!`,
+      message: (props) =>
+        `${props.value} is not a valid phone number! please use 3 digit-3 digit-4 digit`,
     },
     required: true,
   },
