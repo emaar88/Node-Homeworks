@@ -5,7 +5,7 @@ class ContactsController {
   async createNewUser(req, res, next) {
     try {
       const newContact = await ContactModel.create(req.body);
-      return res.send(newContact);
+      return res.status(201).send(newContact);
     } catch (err) {
       next(err);
     }
