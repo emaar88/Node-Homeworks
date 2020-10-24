@@ -1,3 +1,3 @@
-const ContactService = require("./api/contactsMongoose/server/server");
+const ContactService = require("./api/server/server");
 
 new ContactService().start();

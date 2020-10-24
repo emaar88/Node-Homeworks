@@ -30,7 +30,7 @@ class Server {
     this.server.use(express.json());
   }
   initRoutes() {
-    this.server.use("/auth", usersRouter);
+    this.server.use("/", usersRouter);
   }
   async initDb() {
     const options = {
