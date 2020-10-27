@@ -5,7 +5,7 @@ require("dotenv").config();
 
 const URI = process.env.MONGO_URI || "";
 
-const usersRouter = require("../users/user.routes");
+const usersRouter = require("./users/user.routes");
 
 const PORT = process.env.PORT || 3000;
 

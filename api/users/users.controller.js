@@ -13,7 +13,7 @@ class UserController {
       const createdUser = await UserModel.findOne({ email });
 
       if (createdUser) {
-        return res.status(400).send({ message: "Email in use" });
+        return res.status(409).send({ message: "Email in use" });
       }
 
       const hashPassword = await bcrypt.hash(password, 5);
@@ -25,7 +25,7 @@ class UserController {
         subscription: "free",
       });
 
-      return res.status(201).send({ user: { name, email } });
+      return res.status(201).send({ user: { email, password } });
     } catch (err) {
       next(err);
     }
@@ -33,26 +33,27 @@ class UserController {
 
   async login(req, res, next) {
     try {
+      console.log(req.body.email);
       const { email, password } = req.body;
-      const user = await UserModel.find({ email });
+      const findedUserArr = await UserModel.find({ email });
+      const user = findedUserArr[0];
+      console.log(user);
       if (!user) {
         return res.status(401).send({ message: "Email or password is wrong" });
       }
 
-      const isPasswordValid = await bcrypt.compare(password, user[0].password);
+      const isPasswordValid = await bcrypt.compare(password, user.password);
 
       if (!isPasswordValid) {
         return res.status(401).send({ message: "Email or password is wrong" });
       }
 
-      const token = await jwt.sign(
-        { id: user[0].id, email: user[0].email },
-        process.env.TOKEN_SECRET,
-        { expiresIn: "1h" }
-      );
+      const token = await jwt.sign({ id: user._id }, process.env.TOKEN_SECRET, {
+        expiresIn: "1h",
+      });
 
       const updatedUser = await UserModel.findByIdAndUpdate(
-        user[0].id,
+        user._id,
         { token },
         { new: true }
       );
@@ -153,7 +154,7 @@ class UserController {
   static validateUserResponce(users) {
     return users.map((user) => {
       return {
-        id: user.id,
+        id: user._id,
         name: user.name,
         email: user.email,
         subscription: "free",
