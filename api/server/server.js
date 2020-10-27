@@ -5,7 +5,7 @@ require("dotenv").config();
 
 const URI = process.env.MONGO_URI || "";
 
-const contactsRouter = require("../contacts/contacts.routes");
+const usersRouter = require("../users/user.routes");
 
 const PORT = process.env.PORT || 3000;
 
@@ -30,7 +30,7 @@ class Server {
     this.server.use(express.json());
   }
   initRoutes() {
-    this.server.use("/api", contactsRouter);
+    this.server.use("/", usersRouter);
   }
   async initDb() {
     const options = {
@@ -43,7 +43,6 @@ class Server {
       console.log("ERROR! DB CONNECTED UNSUCCESFULLY!");
       process.exit(1);
     }
-    // await mongoose.connect(URI, options);  подключение нашей БД
     console.log("DB CONNECTED SUCCESFULLY");
   }
   initErrorHandler() {}
