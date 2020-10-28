@@ -35,8 +35,8 @@ class UserController {
     try {
       console.log(req.body.email);
       const { email, password } = req.body;
-      const findedUserArr = await UserModel.find({ email });
-      const user = findedUserArr[0];
+      const user = await UserModel.findOne({ email });
+      // const user = findedUserArr[0];
       console.log(user);
       if (!user) {
         return res.status(401).send({ message: "Email or password is wrong" });
@@ -59,7 +59,7 @@ class UserController {
       );
       return res
         .status(200)
-        .send(UserController.validateUserResponce([updatedUser]));
+        .send(UserController.validateUserResponce(updatedUser));
     } catch (err) {
       next(err);
     }
@@ -68,9 +68,8 @@ class UserController {
   async getUsers(req, res, next) {
     try {
       const name = req.query.name;
-
       console.log(req.user);
-      const users = await UserModel.find();
+      const users = await UserModel.findOne();
       return res.send(UserController.validateUserResponce(users));
     } catch (err) {
       next(err);
@@ -100,7 +99,7 @@ class UserController {
         return res.status(401).send({ message: "Not authorized" });
       }
 
-      req.user = UserController.validateUserResponce([user]);
+      req.user = UserController.validateUserResponce(user);
       next();
     } catch (err) {
       next(err);
@@ -111,7 +110,7 @@ class UserController {
     try {
       const user = req.user;
       console.log(user);
-      return res.status(200).send(user[0]);
+      return res.status(200).send(user);
     } catch (err) {
       next(err);
     }
@@ -121,7 +120,7 @@ class UserController {
     try {
       console.log(req.user);
       await UserModel.findByIdAndUpdate(
-        req.user[0].id,
+        req.user.id,
         {
           token: null,
         },
@@ -151,7 +150,17 @@ class UserController {
     UserController.checkValidationError(rulesSchema, req, res, next);
   }
 
-  static validateUserResponce(users) {
+  static validateUserResponce(user) {
+    return {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      subscription: "free",
+      token: user.token,
+    };
+  }
+
+  static validateUsersResponce(users) {
     return users.map((user) => {
       return {
         id: user._id,
